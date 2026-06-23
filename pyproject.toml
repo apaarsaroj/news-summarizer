@@ -12,5 +12,6 @@ dependencies = [
     "newsapi-python>=0.2.7",
     "python-dotenv>=1.2.2",
     "requests>=2.34.2",
+    "rouge-score>=0.1.2",
     "streamlit>=1.58.0",
 ]

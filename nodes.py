@@ -2,7 +2,7 @@ from chains import summarization_chain, similaritychecker_chain, hallucinationch
 from scraper import scrape_articles
 from state import NewsState
 from config import MAX_CHARS, TOP_N
-
+from rouge_score import rouge_scorer
 
 def scrape_node(state: NewsState) -> dict:
     print(f"\n[scrape] iteration {state['iteration'] + 1}")
@@ -52,10 +52,12 @@ def summarize_node(state: NewsState) -> dict:
     }
 
 
+
 def evaluate_node(state: NewsState) -> dict:
     print(f"\n[evaluate] running LLM-as-Judge on {len(state['results'])} articles")
     evaluated = []
     total_score = 0.0
+    scorer = rouge_scorer.RougeScorer(["rougeL"], use_stemmer=True)
 
     for article in state["results"]:
         text_slice = article["text"][:MAX_CHARS]
@@ -77,15 +79,19 @@ def evaluate_node(state: NewsState) -> dict:
         except ValueError:
             c_score = 0
 
+        rouge = scorer.score(text_slice, article["summary"])
+        rouge_l = round(rouge["rougeL"].fmeasure * 100, 1)
+
         avg = (f_score + c_score) / 2
         total_score += avg
 
         evaluated.append({
             **article,
             "faithfulness": f_score,
-            "conciseness": c_score
+            "conciseness": c_score,
+            "rouge_l": rouge_l
         })
-        print(f"[evaluate] faithfulness: {f_score}  conciseness: {c_score}")
+        print(f"[evaluate] faithfulness: {f_score}  conciseness: {c_score}  rouge-L: {rouge_l}")
 
     quality_score = total_score / len(evaluated) if evaluated else 0.0
     print(f"[evaluate] overall quality score: {quality_score:.1f}")

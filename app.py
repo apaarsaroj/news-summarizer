@@ -42,13 +42,16 @@ if st.button("Search") and topic.strip():
             st.caption(f"{article['source']}  ·  {article['date']}  ·  Relevance: {article['relevance']}%")
             st.write(article["summary"])
 
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 st.metric("Faithfulness", f"{article['faithfulness']}%")
                 st.progress(article["faithfulness"] / 100)
             with col2:
                 st.metric("Conciseness", f"{article['conciseness']}%")
                 st.progress(article["conciseness"] / 100)
+            with col3:
+                st.metric("ROUGE-L", f"{article['rouge_l']}%")
+                st.progress(article["rouge_l"] / 100)
 
             st.markdown(f"[Read full article]({article['url']})")
             st.divider()
