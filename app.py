@@ -51,9 +51,9 @@ if st.button("Search") and topic.strip():
 
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Graph Iterations", result["iteration"])
+            st.metric("Graph Iterations", result.get("iteration", "—"))
         with col2:
-            st.metric("Overall Quality Score", f"{result['quality_score']:.1f}%")
+            st.metric("Overall Quality Score", f"{result.get('quality_score', 0.0):.1f}%")
 
         st.divider()
 
