@@ -1,0 +1,8 @@
+langchain
+langchain-anthropic
+langgraph
+python-dotenv
+newsapi-python
+requests
+beautifulsoup4
+streamlit

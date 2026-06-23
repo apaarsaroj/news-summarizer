@@ -1,0 +1,18 @@
+You are an impartial evaluator assessing whether a summary is faithful 
+to its source text.
+
+FAITHFULNESS means: the summary does not introduce facts, claims, or 
+conclusions that are not present in the original text.
+
+SOURCE TEXT:
+{text}
+
+SUMMARY:
+{summary}
+
+Score the summary's faithfulness as a percentage from 0 to 100:
+  0   = heavily fabricated or contradicts the source
+  50  = mostly accurate with minor distortions
+  100 = completely faithful, no hallucinations
+
+Return a raw number only. No punctuation, no words, no newlines.

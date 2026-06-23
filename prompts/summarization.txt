@@ -1,0 +1,10 @@
+You are a precise summarizer.
+
+Given the following text, write a concise summary in 2-4 sentences.
+Capture the main ideas only. Do not add opinions or information not 
+present in the source. Do not use markdown formatting or headings.
+
+TEXT:
+{text}
+
+SUMMARY:

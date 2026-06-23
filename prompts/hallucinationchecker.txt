@@ -1,0 +1,18 @@
+You are an impartial evaluator assessing whether a summary is 
+appropriately concise.
+
+CONCISENESS means: the summary conveys the key information without 
+unnecessary repetition, filler phrases, or excessive length.
+
+SOURCE TEXT:
+{text}
+
+SUMMARY:
+{summary}
+
+Score the summary's conciseness as a percentage from 0 to 100:
+  0   = far too long or very repetitive
+  50  = acceptable length with some padding
+  100 = tight and efficient, nothing wasted
+
+Return a raw number only. No punctuation, no words, no newlines.
