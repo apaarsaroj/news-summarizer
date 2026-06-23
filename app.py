@@ -1,8 +1,14 @@
+import os
 import streamlit as st
 from dotenv import load_dotenv
 from graph import graph
 
 load_dotenv()
+
+if "ANTHROPIC_API_KEY" in st.secrets:
+    os.environ["ANTHROPIC_API_KEY"] = st.secrets["ANTHROPIC_API_KEY"]
+if "NEWS_API_KEY" in st.secrets:
+    os.environ["NEWS_API_KEY"] = st.secrets["NEWS_API_KEY"]
 
 st.set_page_config(page_title="News Summarizer", layout="centered")
 
