@@ -1,4 +1,4 @@
-from chains import summarization_chain, similaritychecker_chain, hallucinationchecker_chain, relevance_chain
+from chains import summarization_chain, similaritychecker_chain, hallucinationchecker_chain, relevance_chain, llm
 from scraper import scrape_articles
 from state import NewsState
 from config import MAX_CHARS, TOP_N
@@ -100,4 +100,18 @@ def evaluate_node(state: NewsState) -> dict:
         "results": evaluated,
         "quality_score": quality_score,
         "status": "evaluated"
+    }
+
+def refine_query_node(state: NewsState) -> dict:
+    print(f"\n[refine] rewriting query for iteration {state['iteration']}")
+    prompt = f"""The search query '{state['topic']}' returned articles with low quality scores.
+Rewrite it as a more specific and targeted news search query.
+Return only the new query, nothing else."""
+
+    response = llm.invoke(prompt)
+    refined = response.content.strip()
+    print(f"[refine] new query: {refined}")
+    return {
+        "topic": refined,
+        "status": "query_refined"
     }
