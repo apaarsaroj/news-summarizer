@@ -50,8 +50,9 @@ if st.button("Search") and topic.strip():
         st.success(f"Top {len(result['results'])} articles for: **{topic}**")
 
         col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
         with col1:
-            st.metric("Graph Iterations", result.get("iteration", "—"))
+            st.metric("Graph Iterations", trace.count("scrape"))
         with col2:
             st.metric("Overall Quality Score", f"{result.get('quality_score', 0.0):.1f}%")
 
