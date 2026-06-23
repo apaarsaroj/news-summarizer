@@ -35,6 +35,11 @@ if st.button("Search") and topic.strip():
         st.error("No articles found. Try a different topic.")
     else:
         st.success(f"Top {len(result['results'])} articles for: **{topic}**")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Graph Iterations", result["iteration"])
+        with col2:
+            st.metric("Overall Quality Score", f"{result['quality_score']:.1f}%")
         st.divider()
 
         for i, article in enumerate(result["results"], 1):
