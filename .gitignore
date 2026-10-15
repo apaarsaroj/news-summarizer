@@ -10,3 +10,8 @@ wheels/
 .venv
 .env
 .DS_Store
+
+# Streamlit local secrets
+.streamlit/secrets.toml
+.coverage
+.pytest_cache/

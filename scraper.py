@@ -38,7 +38,8 @@ def deduplicate(articles):
     return unique
 
 def scrape_articles(topic):
-    raw_articles = get_articles(topic)
+    # Drop duplicate domains first so we do not fetch pages we will discard
+    raw_articles = deduplicate(get_articles(topic))
     articles = []
 
     for article in raw_articles:
@@ -70,5 +71,4 @@ def scrape_articles(topic):
                     "date": date,
                 })
 
-    articles = deduplicate(articles)
     return articles

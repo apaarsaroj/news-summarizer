@@ -10,7 +10,7 @@ Type in a topic. The app fetches recent articles from NewsAPI, ranks them by rel
 
 - **Faithfulness** — does the summary stay true to the source?
 - **Conciseness** — is the summary tight and free of padding?
-- **ROUGE-L** — how much of the key content from the original is captured?
+- **ROUGE-L** — word overlap between the summary and the first 3,000 characters of the article (the same slice the model sees)
 
 If quality scores come back low, the app automatically rewrites the search query and tries again — up to 3 times.
 

@@ -5,10 +5,13 @@ from graph import graph
 
 load_dotenv()
 
-if "ANTHROPIC_API_KEY" in st.secrets:
-    os.environ["ANTHROPIC_API_KEY"] = st.secrets["ANTHROPIC_API_KEY"]
-if "NEWS_API_KEY" in st.secrets:
-    os.environ["NEWS_API_KEY"] = st.secrets["NEWS_API_KEY"]
+# Streamlit Cloud supplies keys via st.secrets; locally they come from .env
+for key in ("ANTHROPIC_API_KEY", "NEWS_API_KEY"):
+    try:
+        if key in st.secrets:
+            os.environ[key] = st.secrets[key]
+    except Exception:
+        pass
 
 st.set_page_config(page_title="News Summarizer", layout="wide")
 
@@ -49,7 +52,6 @@ if st.button("Search") and topic.strip():
     else:
         st.success(f"Top {len(result['results'])} articles for: **{topic}**")
 
-        col1, col2 = st.columns(2)
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Graph Iterations", trace.count("scrape"))

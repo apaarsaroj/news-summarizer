@@ -1,8 +1,19 @@
-from chains import summarization_chain, similaritychecker_chain, hallucinationchecker_chain, relevance_chain, llm
+from chains import summarization_chain, faithfulness_chain, conciseness_chain, relevance_chain, llm
 from scraper import scrape_articles
 from state import NewsState
 from config import MAX_CHARS, TOP_N
 from rouge_score import rouge_scorer
+import re
+
+
+def parse_score(raw, label="score"):
+    """Pull a 0-100 integer out of a judge reply. Returns 0 and logs if none found."""
+    match = re.search(r"\d+", str(raw))
+    if not match:
+        print(f"[warn] could not parse {label} from judge reply: {raw!r}, using 0")
+        return 0
+    return max(0, min(100, int(match.group())))
+
 
 def scrape_node(state: NewsState) -> dict:
     print(f"\n[scrape] iteration {state['iteration'] + 1}")
@@ -23,10 +34,7 @@ def relevance_node(state: NewsState) -> dict:
             "topic": state["topic"],
             "article": article["text"][:MAX_CHARS]
         })
-        try:
-            relevance = int(score)
-        except ValueError:
-            relevance = 0
+        relevance = parse_score(score, "relevance")
         scored.append({**article, "relevance": relevance})
 
     top_articles = sorted(scored, key=lambda x: x["relevance"], reverse=True)[:TOP_N]
@@ -61,23 +69,17 @@ def evaluate_node(state: NewsState) -> dict:
 
     for article in state["results"]:
         text_slice = article["text"][:MAX_CHARS]
-        faithfulness = similaritychecker_chain.invoke({
+        faithfulness = faithfulness_chain.invoke({
             "text": text_slice,
             "summary": article["summary"]
         })
-        conciseness = hallucinationchecker_chain.invoke({
+        conciseness = conciseness_chain.invoke({
             "text": text_slice,
             "summary": article["summary"]
         })
 
-        try:
-            f_score = int(faithfulness)
-        except ValueError:
-            f_score = 0
-        try:
-            c_score = int(conciseness)
-        except ValueError:
-            c_score = 0
+        f_score = parse_score(faithfulness, "faithfulness")
+        c_score = parse_score(conciseness, "conciseness")
 
         rouge = scorer.score(text_slice, article["summary"])
         rouge_l = round(rouge["rougeL"].fmeasure * 100, 1)
